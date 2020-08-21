@@ -1,18 +1,19 @@
 # RealTimeBigDataWorkloadProcess
 大量の受信データを効率よく取り込む
 
-GrpcGreeter
+# GrpcGreeter
 メッセージの受信サービス（非同期のホステッドサービスで永続化を一括で非同期化）
 
-GrpcClinetConsoleApp
+# GrpcClinetConsoleApp
 メッセージ送信のクライアント。一回あたり１００メッセージを送信する。本稼働の実際のメッセージは、１メッセージ2kbとみている。
 
-DequeueClientConsoleApp
+# DequeueClientConsoleApp
 受信メッセージの刈り取り処理。複数起動して処理する。
 
-課題
+# 課題
 処理性能では、DISK I/Oがボトルネックとなっていますので、永続キュー（DiskQueue）をディスク分散させて性能を稼ぐ必要があるとみています。
 私のPCでは二本目のNVMeが刺さらない、、、10世代のXPS15か、ThinkPadが欲しいところです。
 とはいえ、秒間１万メッセージが捌ければ今のテーマのユーザ要件は十分に満たしています。
-ログ
+
+# ログ
 一括Dequeue処理, cnt=6776, 処理時間=566ms
