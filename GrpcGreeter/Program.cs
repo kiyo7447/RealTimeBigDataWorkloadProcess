@@ -27,7 +27,7 @@ namespace GrpcGreeter
 				})
 			.ConfigureServices(services =>
 			{
-				services.AddHostedService<MemoryQueueHostedService>();
+				services.AddHostedService<PersistentQueueHostedService>();
 			});
 	}
 }

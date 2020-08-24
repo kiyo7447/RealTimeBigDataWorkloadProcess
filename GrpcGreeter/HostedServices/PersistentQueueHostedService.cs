@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace GrpcGreeter.HostedServices
 {
-	public class MemoryQueueHostedService : IHostedService, IDisposable
+	public class PersistentQueueHostedService : IHostedService, IDisposable
 	{
 		private int executionCount = 0;
-		private readonly ILogger<MemoryQueueHostedService> _logger;
+		private readonly ILogger<PersistentQueueHostedService> _logger;
 		private Timer _timer;
 
-		public MemoryQueueHostedService(ILogger<MemoryQueueHostedService> logger)
+		public PersistentQueueHostedService(ILogger<PersistentQueueHostedService> logger)
 		{
 			_logger = logger;
 		}
@@ -27,7 +27,7 @@ namespace GrpcGreeter.HostedServices
 			_logger.LogInformation("Timed Hosted Service running.");
 
 			_timer = new Timer(DoWork, null, TimeSpan.Zero,
-				TimeSpan.FromSeconds(5));
+				TimeSpan.FromSeconds(3));
 
 			return Task.CompletedTask;
 		}
