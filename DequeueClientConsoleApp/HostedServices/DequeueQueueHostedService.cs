@@ -1,8 +1,11 @@
-﻿using DiskQueue;
+﻿using DequeueClientConsoleApp;
+using DiskQueue;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,11 +17,13 @@ namespace GrpcGreeter.HostedServices
 	{
 		private int executionCount = 0;
 		private readonly ILogger<DequeueQueueHostedService> _logger;
+		private readonly IOptions<AppSettings> _settings;
 		private Timer _timer;
 
-		public DequeueQueueHostedService(ILogger<DequeueQueueHostedService> logger)
+		public DequeueQueueHostedService(IOptions<AppSettings> settings, ILogger<DequeueQueueHostedService> logger)
 		{
 			_logger = logger;
+			_settings = settings;
 		}
 
 		public Task StartAsync(CancellationToken stoppingToken)
@@ -26,7 +31,7 @@ namespace GrpcGreeter.HostedServices
 			_logger.LogInformation("Timed Hosted Service running.");
 
 			_timer = new Timer(DoWork, null, TimeSpan.Zero,
-				TimeSpan.FromSeconds(3));
+				TimeSpan.FromSeconds(_settings.Value.DoWorkTimeSpan));
 
 			return Task.CompletedTask;
 		}
@@ -39,12 +44,11 @@ namespace GrpcGreeter.HostedServices
 
 			Console.Write(".");
 #if DEBUG
-			using (var queue = PersistentQueue.WaitFor(@"..\..\..\..\GrpcGreeter\queue_a", TimeSpan.FromSeconds(30)))
-
+			var queuePath = Debugger.IsAttached ? @"..\..\..\..\GrpcGreeter\queue_a" : @"..\..\..\..\GrpcGreeter\bin\Debug\netcoreapp3.1\queue_a";
+			using (var queue = PersistentQueue.WaitFor(queuePath, TimeSpan.FromSeconds(_settings.Value.QueueAccessTimeout)))
 #else
-			using (var queue = PersistentQueue.WaitFor(@"queue_a", TimeSpan.FromSeconds(30)))
+			using (var queue = PersistentQueue.WaitFor(@"queue_a", TimeSpan.FromSeconds(_settings.Value.QueueAccessTimeout)))
 #endif
-
 			using (var session = queue.OpenSession())
 			{
 				var start = Environment.TickCount;
@@ -66,8 +70,6 @@ namespace GrpcGreeter.HostedServices
 				if (cnt > 0)
 					Console.WriteLine($"一括Dequeue処理, cnt={cnt}, 処理時間={Environment.TickCount - start}ms");
 			}
-
-
 		}
 
 		public Task StopAsync(CancellationToken stoppingToken)
