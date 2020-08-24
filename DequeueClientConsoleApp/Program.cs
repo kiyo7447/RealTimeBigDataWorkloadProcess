@@ -4,6 +4,7 @@ using GrpcGreeter.HostedServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Text;
@@ -27,6 +28,11 @@ namespace InsertDbConsoleApp
 				{
 					services.Configure<AppSettings>(hostContext.Configuration.GetSection("AppSettings"));
 					services.AddHostedService<DequeueQueueHostedService>();
+				})
+				.ConfigureLogging((hostContext, config) => 
+				{
+					config.AddConsole();
+					config.AddDebug();
 				})
 				.Build();
 

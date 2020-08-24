@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -38,13 +39,15 @@ namespace GrpcGreeter.HostedServices
 
 		private void DoWork(object state)
 		{
+
 			var count = Interlocked.Increment(ref executionCount);
-			_logger.LogInformation(
-				"Timed Hosted Service is working. Count: {Count}", count);
+			//_logger.LogInformation(
+			//	"Timed Hosted Service is working. Count: {Count}", count);
 
 			Console.Write(".");
-#if DEBUG
-			var queuePath = Debugger.IsAttached ? @"..\..\..\..\GrpcGreeter\queue_a" : @"..\..\..\..\GrpcGreeter\bin\Debug\netcoreapp3.1\queue_a";
+#if true
+			var queuePath = Debugger.IsAttached ? @".\..\..\..\..\GrpcGreeter\queue_a" : @".\..\..\..\..\GrpcGreeter\bin\Debug\netcoreapp3.1\queue_a";
+			//			Console.WriteLine(new DirectoryInfo(queuePath).FullName + $"{_settings.Value.QueueAccessTimeout}");
 			using (var queue = PersistentQueue.WaitFor(queuePath, TimeSpan.FromSeconds(_settings.Value.QueueAccessTimeout)))
 #else
 			using (var queue = PersistentQueue.WaitFor(@"queue_a", TimeSpan.FromSeconds(_settings.Value.QueueAccessTimeout)))
@@ -53,22 +56,29 @@ namespace GrpcGreeter.HostedServices
 			{
 				var start = Environment.TickCount;
 				var cnt = 0;
+				var byteCount = 0;
 				while (true)
 				{
 					var data = session.Dequeue();
 					if (data == null)
 					{
-						session.Flush();
+						if (cnt > 0)
+							session.Flush();
 						break;
 					}
 					else
 					{
-						cnt++;
-						Console.WriteLine($"{Encoding.UTF8.GetString(data)}, cnt={cnt}");
+						Interlocked.Increment(ref cnt);
+						byteCount += data.Length;
+						_logger.LogDebug($"{Encoding.UTF8.GetString(data)}, cnt={cnt}");
 					}
 				}
 				if (cnt > 0)
-					Console.WriteLine($"一括Dequeue処理, cnt={cnt}, 処理時間={Environment.TickCount - start}ms");
+				{
+					Console.Out.WriteLine();
+					_logger.LogInformation($"一括Dequeue処理, 処理メッセージ数={cnt:N0}, データ量={byteCount:N0}byte, 処理時間={Environment.TickCount - start:N0}ms");
+					//Console.WriteLine($"一括Dequeue処理, cnt={cnt}, 処理時間={Environment.TickCount - start}ms");
+				}
 			}
 		}
 

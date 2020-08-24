@@ -40,16 +40,24 @@ namespace GrpcGreeter.HostedServices
 			{
 				var start = Environment.TickCount;
 				var cnt = 0;
+				var byteCount = 0;
 				using (var queue = PersistentQueue.WaitFor("queue_a", TimeSpan.FromSeconds(30)))
 				using (var session = queue.OpenSession())
 				{
-					while (GreeterService.MessageQueue.Count > 0)
+					//スレッドセーフではないので、
+					lock (GreeterService.MessageQueue.SyncRoot)
 					{
-						session.Enqueue(Encoding.UTF8.GetBytes((string)GreeterService.MessageQueue.Dequeue()));
-						cnt++;
+						while (GreeterService.MessageQueue.Count > 0)
+						{
+							var data = Encoding.UTF8.GetBytes((string)GreeterService.MessageQueue.Dequeue());
+							byteCount += data.Length;
+							session.Enqueue(data); ;
+							cnt++;
+						}
 					}
 					session.Flush();
-					_logger.LogInformation($"データの永続化件数={cnt}, 処理時間={Environment.TickCount - start}ms");
+					_logger.LogInformation($"データの永続化, 処理メッセージ数={cnt:N0}, データ量={byteCount:N0}byte, 処理時間={Environment.TickCount - start:N0}ms");
+
 				}
 
 			}

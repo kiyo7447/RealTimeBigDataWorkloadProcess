@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DiskQueue;
 using Grpc.Core;
@@ -30,7 +31,7 @@ namespace GrpcGreeter
 
 		public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
 		{
-			_logger.LogInformation($"Saying hello to {request.Name} sv time:{DateTime.Now.ToString("HH:mm:ss.FFF")}");
+			//_logger.LogInformation($"Saying hello to {request.Name} sv time:{DateTime.Now.ToString("HH:mm:ss.FFF")}");
 
 			var message = $"Hello {request.Name} sv time:{DateTime.Now.ToString("HH:mm:ss.FFF")}";
 			//IPersistentQueue queue = new PersistentQueue("queue_a");
@@ -38,8 +39,15 @@ namespace GrpcGreeter
 #if true
 			//↓この処理が無ければ、、7～8msで処理が完了する。この処理があると70～90msmもかかる。
 			//Enqueue(message);
+			lock (MessageQueue.SyncRoot)
+			{
+				MessageQueue.Enqueue(message);
+			}
 
-			MessageQueue.Enqueue(message);
+			//クライアントタイムアウトのテスト用
+			//120分
+			//Thread.Sleep(1000 * 60 * 120);
+
 #else
 			//↓この処理はなぜか動作しない。二周目がDiskQueueの中で、System.IO.IOExceptionが発生し、先に進まなくなる。
 			//原因は不明。。
