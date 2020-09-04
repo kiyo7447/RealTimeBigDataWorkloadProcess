@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeter", "GrpcGreeter\GrpcGreeter.csproj", "{99E867D3-9971-412B-9C14-92031C45473F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcClinetConsoleApp", "GrpcClinetConsoleApp\GrpcClinetConsoleApp.csproj", "{A84C6FDE-8640-487C-A902-D1FA26185819}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DequeueClientConsoleApp", "DequeueClientConsoleApp\DequeueClientConsoleApp.csproj", "{81265028-A095-42B8-97AC-B3BFA6FF90B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcClinetConsoleAppLegacy", "GrpcClinetConsoleAppLegacy\GrpcClinetConsoleAppLegacy.csproj", "{0B30A24A-63B4-4945-9751-AD7690461216}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrpcGreeterServer", "GrpcGreeterServer\GrpcGreeterServer.csproj", "{9DB02BFA-E9E6-48EF-8DAE-AA18E667059D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{99E867D3-9971-412B-9C14-92031C45473F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99E867D3-9971-412B-9C14-92031C45473F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99E867D3-9971-412B-9C14-92031C45473F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99E867D3-9971-412B-9C14-92031C45473F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A84C6FDE-8640-487C-A902-D1FA26185819}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A84C6FDE-8640-487C-A902-D1FA26185819}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A84C6FDE-8640-487C-A902-D1FA26185819}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{0B30A24A-63B4-4945-9751-AD7690461216}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B30A24A-63B4-4945-9751-AD7690461216}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B30A24A-63B4-4945-9751-AD7690461216}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DB02BFA-E9E6-48EF-8DAE-AA18E667059D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DB02BFA-E9E6-48EF-8DAE-AA18E667059D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DB02BFA-E9E6-48EF-8DAE-AA18E667059D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DB02BFA-E9E6-48EF-8DAE-AA18E667059D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -46,7 +46,7 @@ namespace GrpcGreeter.HostedServices
 
 			Console.Write(".");
 #if true
-			var queuePath = Debugger.IsAttached ? @".\..\..\..\..\GrpcGreeter\queue_a" : @".\..\..\..\..\GrpcGreeter\bin\Debug\netcoreapp3.1\queue_a";
+			var queuePath = Debugger.IsAttached ? @".\..\..\..\..\GrpcGreeterServer\queue_a" : @".\..\..\..\..\GrpcGreeterServer\bin\Debug\netcoreapp3.1\queue_a";
 			//			Console.WriteLine(new DirectoryInfo(queuePath).FullName + $"{_settings.Value.QueueAccessTimeout}");
 			using (var queue = PersistentQueue.WaitFor(queuePath, TimeSpan.FromSeconds(_settings.Value.QueueAccessTimeout)))
 #else
