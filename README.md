@@ -3,7 +3,7 @@
 - 実際の処理中のPCの利用状況
 ![2020-09-04_16h03_33](https://user-images.githubusercontent.com/3734512/92209693-67c42880-eec8-11ea-91f5-c7cf0f1d82de.png)
 
-# GrpcGreeter
+# GrpcGreeterServer
 メッセージの受信サービス（非同期のホステッドサービスで永続化を一括で非同期化）
 - 50msで1,000メッセージを処理可能（メッセージサイズ12Kbyte）
 ![2020-09-04_16h03_50](https://user-images.githubusercontent.com/3734512/92209703-6c88dc80-eec8-11ea-9bdf-39a5e8a84b5b.png)
@@ -24,5 +24,5 @@
 とはいえ、秒間１万メッセージが捌ければ今のテーマのユーザ要件は十分に満たしています。
 
 # ログ
-一括Dequeue処理, cnt=6776, 処理時間=566ms（メッセージサイズ2Kbyte）
+一括Dequeue処理, cnt=6,776, 処理時間=566ms（メッセージサイズ2Kbyte）
 
